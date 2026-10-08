@@ -26,6 +26,8 @@ SOFT = "'Segoe UI','Helvetica Neue',Helvetica,Arial,sans-serif"
 # ---------- config ----------
 PROFILE_LOGIN = os.environ.get("PROFILE_LOGIN", "mehroofsaba")
 MAIN_PROJECT = "Oneiric"          # gets the big spotlight card
+PILE_PROJECTS = ["Calculator", "ChessMaster"]   # always shown in "also in the pile"
+HIDDEN_PROJECTS = ["Portfolio"]                 # never shown (add a repo name here to hide it)
 
 # Static personality (these are YOUR choices, so they are not pulled from GitHub)
 TOOLS = ["Java", "Spring Boot", "JavaScript", "React", "HTML", "CSS", "C++", "Tauri", "Node.js"]
@@ -358,12 +360,13 @@ def fallback_repos():
             for n in FALLBACK_REPOS]
 
 def select(repos, pinned):
-    pool = [r for r in repos if r["name"].lower() != PROFILE_LOGIN.lower()]
+    pool = [r for r in repos if r["name"].lower() != PROFILE_LOGIN.lower() and r["name"] not in HIDDEN_PROJECTS]
     main = next((r for r in pool if r["name"] == MAIN_PROJECT), None)
-    rest = [r for r in pool if r is not main]
+    pile = [r for n in PILE_PROJECTS for r in pool if r["name"] == n]
+    rest = [r for r in pool if r is not main and r not in pile]
     order = {n: i for i, n in enumerate(pinned)}
     rest.sort(key=lambda r: (0, order[r["name"]]) if r["name"] in order else (1, 0))   # pinned first, then most recently pushed
-    return main, rest[:4], rest[4:6], pool
+    return main, rest[:4], pile, pool
 
 def info(r):
     cur = CURATED.get(r["name"], {})
