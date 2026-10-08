@@ -1,0 +1,36 @@
+name: update profile
+
+# Rebuilds the whole profile from your REAL GitHub data:
+# repos + descriptions + commit counts, stats, pink contribution graph, latest commits.
+# It rewrites assets/*.svg and README.md, then commits them if anything changed.
+on:
+  schedule:
+    - cron: "0 */3 * * *"      # every 3 hours
+  workflow_dispatch:            # "Run workflow" button in the Actions tab
+  push:
+    paths:
+      - "_source/**"            # rebuild right away when you edit the generator
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Rebuild with live data
+        env:
+          # PROFILE_TOKEN is optional (see _source/README.md). Falls back to the built-in token.
+          GITHUB_TOKEN: ${{ secrets.PROFILE_TOKEN || secrets.GITHUB_TOKEN }}
+          PROFILE_LOGIN: ${{ github.repository_owner }}
+        run: python3 _source/build_assets.py --live
+      - name: Commit if anything changed
+        run: |
+          git config user.name "sakurahub-bot"
+          git config user.email "sakurahub-bot@users.noreply.github.com"
+          git add assets README.md
+          git diff --cached --quiet || (git commit -m "chore: refresh profile data" && git push)
