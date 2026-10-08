@@ -45,17 +45,7 @@
   </tr>
 </table>
 
-<img src="assets/building.svg" alt="anyway, here&#x27;s what i&#x27;m building" width="100%">
-
 <img src="assets/divider-4.svg" alt="" width="100%">
-
-<img src="assets/stats.svg" alt="tiny numbers from the chaos" width="100%">
-
-<img src="assets/contributions.svg" alt="planting little bits of me here: my real GitHub contributions over the last year" width="100%">
-
-<img src="assets/divider-5.svg" alt="" width="100%">
-
-<img src="assets/diary.svg" alt="developer diary: my latest real commits" width="100%">
 
 <img src="assets/contact.svg" alt="wanna cook something weird?" width="100%">
 

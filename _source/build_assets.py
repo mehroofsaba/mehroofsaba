@@ -1,8 +1,8 @@
 """
 SakuraHub asset generator.
 Run:  python3 _source/build_assets.py          (offline: uses the small fallback data below)
-      python3 _source/build_assets.py --live   (pulls EVERYTHING real from GitHub: repos, descriptions,
-                                                commit counts, stats, contribution graph, latest commits)
+      python3 _source/build_assets.py --live   (pulls your real repos from GitHub: names, descriptions,
+                                                commit counts, stars, last-pushed times)
 The workflow in .github/ runs --live every few hours. It rewrites ./assets/*.svg AND ./README.md.
 Nothing here is invented: if a number is not known, it is simply not shown.
 """
@@ -45,11 +45,6 @@ CURATED = {
 
 # Used only before the first live sync (everything below was read from your real GitHub)
 FALLBACK_REPOS = ["Oneiric", "Wobble", "CyberDefuse", "Hacktoberfest", "Portfolio", "Calculator", "ChessMaster"]
-FALLBACK_STATS = [("public repositories", "12"), ("followers", "2"), ("following", "2")]
-FALLBACK_DIARY = [("oneiric", "Still the main thing."),
-                  ("wobble", "Lives in the tray with open, hide, mute, settings and quit."),
-                  ("bugbite", "Paste code, pick a language, get a plain explanation."),
-                  ("cyberdefuse", "Started as a single file, nodezero.html. Big idea, tiny start.")]
 
 # ---------- little drawing helpers ----------
 def svg(w, h, body, defs=""):
@@ -279,13 +274,12 @@ def hero():
 # ======================================================================
 # DIVIDERS (each hides a tiny note)
 # ======================================================================
-def divider(name, note, seed):
+def divider(name, seed):
+    """thin sakura line, no text"""
     W, H = 1000, 56
-    t, tl = hand(500, 33, note, 14, SILVER, "middle", 'font-style="italic" opacity=".9"')
-    gl, gr = 500 - tl / 2 - 20, 500 + tl / 2 + 20
-    b = f'<line x1="40" y1="28" x2="{gl:.0f}" y2="28" stroke="{LINE}" stroke-width="1.4" stroke-linecap="round"/>'
-    b += f'<line x1="{gr:.0f}" y1="28" x2="960" y2="28" stroke="{LINE}" stroke-width="1.4" stroke-linecap="round"/>' + t
-    b += flower(40, 28, 7, 10, SAKURA) + flower(960, 28, 7, 40, LAV)
+    b = (f'<line x1="40" y1="28" x2="468" y2="28" stroke="{LINE}" stroke-width="1.4" stroke-linecap="round"/>'
+         f'<line x1="532" y1="28" x2="960" y2="28" stroke="{LINE}" stroke-width="1.4" stroke-linecap="round"/>')
+    b += flower(500, 28, 11, 8, SAKURA) + flower(40, 28, 6, 10, SAKURA) + flower(960, 28, 6, 40, LAV)
     rnd = random.Random(seed)
     for _ in range(6):
         b += petal(rnd.choice([rnd.uniform(70, 280), rnd.uniform(720, 930)]), rnd.uniform(8, 48), rnd.uniform(3, 5), rnd.uniform(0, 360), rnd.choice([SAKURA, BLUSH, DUSTY]), .7)
@@ -327,15 +321,10 @@ def esc(s): return html.escape(s, quote=True)
 # LIVE DATA  (GitHub GraphQL; every number on the page comes from here)
 # ======================================================================
 Q1 = """query($login:String!){user(login:$login){
- id name bio
- followers{totalCount} following{totalCount}
- allRepos: repositories(privacy:PUBLIC, ownerAffiliations:OWNER){totalCount}
  pinnedItems(first:6, types:REPOSITORY){nodes{... on Repository{name}}}
  repositories(first:100, privacy:PUBLIC, ownerAffiliations:OWNER, isFork:false, orderBy:{field:PUSHED_AT, direction:DESC}){
   nodes{name description url stargazerCount pushedAt isArchived primaryLanguage{name}
-        defaultBranchRef{target{... on Commit{history{totalCount}}}}}}
- contributionsCollection{totalCommitContributions totalPullRequestContributions totalIssueContributions
-  contributionCalendar{totalContributions weeks{contributionDays{date contributionCount contributionLevel}}}}}}"""
+        defaultBranchRef{target{... on Commit{history{totalCount}}}}}}}}"""
 
 def gql(query, variables, tok):
     req = urllib.request.Request("https://api.github.com/graphql",
@@ -359,33 +348,8 @@ def fetch_live(tok=None):
         print("no GITHUB_TOKEN: using fallback data"); return None
     try:
         u = gql(Q1, {"login": PROFILE_LOGIN}, tok)["user"]
-        repos = [norm_repo(n) for n in u["repositories"]["nodes"] if not n["isArchived"]]
-        cc = u["contributionsCollection"]
-        live = dict(
-            repos=repos,
-            pinned=[n["name"] for n in u["pinnedItems"]["nodes"] if n],
-            stats=[("public repositories", str(u["allRepos"]["totalCount"])),
-                   ("stars earned", str(sum(n["stargazerCount"] for n in u["repositories"]["nodes"]))),
-                   ("commits this year", str(cc["totalCommitContributions"])),
-                   ("pull requests this year", str(cc["totalPullRequestContributions"])),
-                   ("followers", str(u["followers"]["totalCount"])),
-                   ("following", str(u["following"]["totalCount"]))],
-            calendar=cc["contributionCalendar"], commits=[])
-        # latest real commits from the 5 most recently pushed repos
-        recent = [r["name"] for r in repos if r["name"].lower() != PROFILE_LOGIN.lower()][:5]
-        if recent:
-            parts = "".join(f'r{i}: repository(owner:$login, name:"{n}"){{name defaultBranchRef{{target{{... on Commit{{'
-                            f'history(first:4, author:{{id:$id}}){{nodes{{messageHeadline committedDate}}}}}}}}}}}}\n' for i, n in enumerate(recent))
-            try:
-                d2 = gql("query($login:String!,$id:ID!){" + parts + "}", {"login": PROFILE_LOGIN, "id": u["id"]}, tok)
-                for v in d2.values():
-                    if not v: continue
-                    for c in (((v.get("defaultBranchRef") or {}).get("target")) or {}).get("history", {}).get("nodes", []):
-                        live["commits"].append((v["name"], c["messageHeadline"], c["committedDate"]))
-                live["commits"].sort(key=lambda x: x[2], reverse=True)
-            except Exception as e:
-                print("commit feed failed:", e)
-        return live
+        return dict(repos=[norm_repo(n) for n in u["repositories"]["nodes"] if not n["isArchived"]],
+                    pinned=[n["name"] for n in u["pinnedItems"]["nodes"] if n])
     except Exception as e:
         print("live fetch failed, using fallback data:", e); return None
 
@@ -409,7 +373,7 @@ def info(r):
     if r["commits"]: parts.append(f'{r["commits"]} commits')
     if r["stars"]: parts.append(f'★ {r["stars"]}')
     return dict(name=cur.get("display", r["name"]), repo=r["name"], url=r["url"],
-                desc=r["desc"] or cur.get("desc") or "No description on GitHub yet.",
+                desc=r["desc"] or cur.get("desc") or "Description coming soon.",
                 tech=cur.get("tech") or r["lang"] or "see repo", art=cur.get("art"),
                 link=cur.get("link", "View repo  →"), badge=badge, meta=" · ".join(parts), updated=updated)
 
@@ -417,18 +381,19 @@ def info(r):
 # ABOUT
 # ======================================================================
 def about():
-    W, H = 1000, 340
+    W, H = 1000, 362
     b = card_frame(W, H, glow=(900, 40, 220, "pinkglow"))
     t = "so... who am i?"
     b += card_title(t) + squiggle(title_end(t) + 14, 36, 70, SAKURA, 2.5)
-    lines = ["Hey! I'm Mehroof. I like turning random ideas into things I can",
-             "actually click, break, rebuild, and occasionally finish.",
+    lines = ["Hey, I'm Mehroof. I like making interfaces that feel like",
+             "actual little places rather than just... interfaces.",
              "",
-             "Right now most of that energy goes into Oneiric, a dark, dreamy",
-             "personal space I'm building with Spring Boot, plus a few smaller",
-             "experiments: a desktop companion, a puzzle game, a debugging helper.",
+             "Right now I'm mostly buried in Oneiric, a dark little space",
+             "I'm building with Spring Boot. Somewhere along the way, I also",
+             "decided I needed a desktop pet, a puzzle game, a debugging thing,",
+             "and several other projects I probably did not need.",
              "",
-             "My GitHub bio says \"The Bugs Fixes Me!!\" and honestly, fair."]
+             "My bio defines me."]
     y = 92
     for l in lines:
         if l == "":
@@ -436,12 +401,10 @@ def about():
         b += text(40, y, l, 17, CREAM, SOFT, extra='letter-spacing=".15"'); y += 27
     sg, w = hand(40, y + 22, "same brain, different day.", 19, SAKURA, extra='font-style="italic"')
     b += sg + heart(40 + w + 22, y + 15, 10)
-    b += cat_face(870, 235, 1.25)
-    b += f'<path d="M830 292 q40 14 80 0" stroke="{LAV}" stroke-opacity=".5" stroke-width="2" fill="none" stroke-linecap="round"/>'
-    b += branch([(760, 316), (820, 326), (900, 318), (990, 304)], 4, seed=8, density=.6, fr=9)
-    n1, _ = hand(700, 70, "(yes, that's a cat.", 12, SILVER, extra='transform="rotate(-3 700 70)" opacity=".8"')
-    n2, _ = hand(706, 87, "no, i won't explain.)", 12, SILVER, extra='transform="rotate(-3 706 87)" opacity=".8"')
-    b += n1 + n2 + stars(W, H, 18, 31, avoid=(0, 60, 700, 340)) + sparkle(955, 40, 6, CREAM)
+    b += cat_face(870, 252, 1.25)
+    b += f'<path d="M830 309 q40 14 80 0" stroke="{LAV}" stroke-opacity=".5" stroke-width="2" fill="none" stroke-linecap="round"/>'
+    b += branch([(760, 338), (820, 348), (900, 340), (990, 326)], 4, seed=8, density=.6, fr=9)
+    b += stars(W, H, 18, 31, avoid=(0, 60, 700, 340)) + sparkle(955, 40, 6, CREAM)
     save("about.svg", svg(W, H, b))
 
 def tools():
@@ -458,8 +421,7 @@ def poking():
     b = card_frame(W, H, glow=(430, 30, 160, "lavglow")) + card_title("currently poking at", size=21)
     p, _ = pill_flow(POKING, 28, 76, W - 56); b += p
     sg, w = hand(28, H - 30, "slowly... but surely.", 16, LAV, extra='font-style="italic"')
-    n, _ = hand(W - 150, H - 18, "(ask me about tabs)", 11, SILVER, extra='opacity=".6"')
-    b += sg + heart(28 + w + 18, H - 35, 9, LAV) + n + sparkle(W - 34, 36, 6) + sparkle(W - 70, 200, 4, SAKURA)
+    b += sg + heart(28 + w + 18, H - 35, 9, LAV) + sparkle(W - 34, 36, 6) + sparkle(W - 70, 200, 4, SAKURA)
     save("poking.svg", svg(W, H, b))
 
 def section_header(name, title, sub=None, seed=1):
@@ -594,129 +556,17 @@ def oneiric_spotlight(d):
     b += sparkle(960, 40, 7) + sparkle(930, 300, 5, LAV) + heart(940, 70, 10)
     save("project-main.svg", svg(W, H, b, cp))
 
-def building(rows):
-    W = 1000
-    H = 82 + len(rows) * 56 + 12
-    b = card_frame(W, H, glow=(900, 30, 200, "pinkglow"))
-    t = "anyway, here's what i'm building."
-    b += flower(38, 42, 12, 0) + text(62, 52, t, 24, CREAM, HAND, extra='font-weight="600" ' + tl_attr(t, 24))
-    for i, (n, dsc, s) in enumerate(rows):
-        c = ACCENTS[i % 5]
-        y = 74 + i * 56
-        b += f'<rect x="24" y="{y}" width="952" height="46" rx="14" fill="#10132a" stroke="{LINE}"/>'
-        b += f'<circle cx="52" cy="{y+23}" r="14" fill="{c}" fill-opacity=".18" stroke="{c}" stroke-opacity=".6"/>' + sparkle(52, y+23, 6, c)
-        b += text(78, y + 21, clip(n, 22), 16, CREAM, HAND, extra='font-weight="700"') + text(78, y + 38, clip(dsc, 96), 12, SILVER, SOFT)
-        if s:
-            p, _ = pill(940 - (len(s)*6.8+22) + 10, y + 11, s, c, 11, 24); b += p
-    b += stars(W, H, 10, 44, avoid=(0, 60, 1000, H))
-    save("building.svg", svg(W, H, b))
-
-# ======================================================================
-# STATS
-# ======================================================================
-def stats(items, live):
-    n = len(items)
-    cols_n = 3
-    rows_n = (n + cols_n - 1) // cols_n
-    W, H = 1000, 110 + rows_n * 90 + 40
-    b = card_frame(W, H, glow=(100, 20, 220, "lavglow"))
-    t = "tiny numbers from the chaos."
-    b += card_title(t, y=46, size=26) + squiggle(title_end(t, 26) + 14, 38, 60, LAV, 2.5)
-    cols = [SAKURA, LAV, BLUSH, BLUE, DUSTY, LAV]
-    gap = 16; cw = (W - 56 - (cols_n - 1) * gap) / cols_n
-    for i, (lab, val) in enumerate(items):
-        cx, cy, c = 28 + (i % cols_n) * (cw + gap), 80 + (i // cols_n) * 90, cols[i % 6]
-        b += f'<rect x="{cx:.0f}" y="{cy}" width="{cw:.0f}" height="78" rx="18" fill="#10132a" stroke="{c}" stroke-opacity=".4"/>'
-        b += f'<rect x="{cx:.0f}" y="{cy+16}" width="4" height="46" rx="2" fill="{c}" opacity=".8"/>'
-        b += text(f"{cx+24:.0f}", cy + 33, lab, 14, SILVER, SOFT) + text(f"{cx+24:.0f}", cy + 64, val, 30, CREAM, HAND, extra='font-weight="700"')
-        b += flower(cx + cw - 38, cy + 39, 11, i * 20, c, .8)
-    sg, _ = hand(30, H - 18, "the numbers are real. the chaos is worse.", 17, SAKURA, extra='font-style="italic"')
-    nt, _ = hand(W - 30, H - 16, "refreshed automatically from github" if live else "fallback numbers until the first sync", 11, SILVER, "end", 'opacity=".55"')
-    b += sg + nt + cat_sleep(880, 50, .55)
-    save("stats.svg", svg(W, H, b))
-
-# ======================================================================
-# CONTRIBUTION GARDEN (your real calendar, pink paint)
-# ======================================================================
-LEVELS = {"NONE": "#1f2342", "FIRST_QUARTILE": "#5b3f86", "SECOND_QUARTILE": "#9a6bb5",
-          "THIRD_QUARTILE": "#d27ba3", "FOURTH_QUARTILE": "#ffa8cf"}
-
-def contributions(cal):
-    W, H = 1000, 270
-    b = card_frame(W, H, glow=(880, 40, 240, "pinkglow"))
-    b += card_title("planting little bits of me here...", y=46, size=24)
-    cs, step, x0, y0 = 14, 17, 58, 100
-    if cal:
-        weeks = cal["weeks"]
-        h1, _ = hand(W - 30, 46, f'{cal["totalContributions"]} contributions in the last year', 18, CREAM, "end", 'font-weight="600"')
-        b += h1
-        last_m = None
-        for wi, wk in enumerate(weeks):
-            days = wk["contributionDays"]
-            if not days: continue
-            m = days[0]["date"][5:7]
-            if m != last_m and wi < len(weeks) - 2:
-                b += text(x0 + wi * step, 90, ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"][int(m) - 1], 11, SILVER, SOFT)
-            last_m = m
-            for d in days:
-                dow = datetime.date.fromisoformat(d["date"]).isoweekday() % 7   # sunday = 0
-                b += (f'<rect x="{x0+wi*step}" y="{y0+dow*step}" width="{cs}" height="{cs}" rx="4" '
-                      f'fill="{LEVELS.get(d["contributionLevel"], LEVELS["NONE"])}"><title>{d["contributionCount"]} on {d["date"]}</title></rect>')
-        for lab, r in (("mon", 1), ("wed", 3), ("fri", 5)):
-            b += text(28, y0 + r * step + 11, lab, 10, SILVER, SOFT, "middle")
-    else:
-        for wi in range(53):
-            for r in range(7):
-                b += f'<rect x="{x0+wi*step}" y="{y0+r*step}" width="{cs}" height="{cs}" rx="4" fill="{LEVELS["NONE"]}" opacity=".55"/>'
-        b += f'<rect x="250" y="130" width="500" height="56" rx="18" fill="#0c0f1d" fill-opacity=".9" stroke="{LINE}"/>'
-        b += text(500, 154, "the garden is waiting for its first sync.", 17, CREAM, HAND, "middle", tl_attr("the garden is waiting for its first sync.", 17))
-        b += text(500, 174, "your real activity appears after the workflow runs once. nothing here is made up.", 12, SILVER, SOFT, "middle")
-    lx = W - 30 - (5 * step + 90)
-    b += text(lx, 244, "less", 11, SILVER, SOFT)
-    for i, k in enumerate(["NONE", "FIRST_QUARTILE", "SECOND_QUARTILE", "THIRD_QUARTILE", "FOURTH_QUARTILE"]):
-        b += f'<rect x="{lx+32+i*step}" y="233" width="{cs}" height="{cs}" rx="4" fill="{LEVELS[k]}"/>'
-    b += text(lx + 32 + 5 * step + 6, 244, "more", 11, SILVER, SOFT)
-    nt, _ = hand(190, 246, "the data is real. only the paint is mine.", 12, SILVER, extra='opacity=".7"')
-    b += nt + branch([(-10, 268), (70, 258), (150, 270)], 3, seed=41, density=.4, fr=7) + sparkle(960, 78, 5) + sparkle(30, 70, 4, SAKURA)
-    save("contributions.svg", svg(W, H, b))
-
-# ======================================================================
-# DIARY  (live: your latest real commits)
-# ======================================================================
-def diary(commits):
-    items = [(r, m, rel(d)) for r, m, d in commits[:6]] if commits else [(t, x, None) for t, x in FALLBACK_DIARY]
-    n = len(items)
-    W, H = 1000, 84 + n * 52 + 40
-    b = card_frame(W, H, glow=(900, H - 30, 220, "pinkglow"))
-    t = "developer diary"
-    b += card_title(t, y=46, size=26)
-    sub = "straight from my latest commits. nothing staged." if commits else "notes until the first live sync."
-    st, _ = hand(title_end(t, 26) + 22, 46, sub, 13, SILVER, extra='font-style="italic"')
-    b += st
-    for i, (tag, msg, when) in enumerate(items):
-        y = 84 + i * 52
-        b += f'<rect x="26" y="{y}" width="948" height="42" rx="14" fill="#10132a" stroke="{LINE}"/>'
-        p, w = pill(40, y + 8, clip(tag, 16), ACCENTS[i % 5], 12, 26); b += p
-        ax = 40 + w + 14
-        b += f'<path d="M{ax:.0f} {y+21} h22 m-6 -5 l6 5 l-6 5" stroke="{LAV}" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'
-        b += text(f"{ax+36:.0f}", y + 27, clip(msg, 78), 15, CREAM, SOFT)
-        if when: b += text(952, y + 26, when, 12, SILVER, SOFT, "end")
-    ft, _ = hand(30, H - 16, "pulled from my real commit history. i just write the commits." if commits else "this fills itself from real commits once the workflow runs.", 12, SILVER, extra='opacity=".7"')
-    b += ft + branch([(800, H), (880, H - 14), (960, H - 8), (1010, H - 24)], 4, seed=15, density=.5, fr=8) + sparkle(950, 40, 6)
-    save("diary.svg", svg(W, H, b))
-
 # ======================================================================
 # CONTACT, BUTTONS, FOOTER
 # ======================================================================
 def contact():
-    W, H = 1000, 200
-    b = card_frame(W, H, glow=(100, 170, 220, "pinkglow"))
+    W, H = 1000, 176
+    b = card_frame(W, H, glow=(100, 150, 220, "pinkglow"))
     b += card_title("wanna cook something weird?", y=48, size=26)
     b += text(40, 94, "Let's talk about projects, ideas, collaborations, open source,", 17, CREAM, SOFT)
     b += text(40, 120, "or just interesting things to build.", 17, CREAM, SOFT)
     b += text(40, 154, "Easiest way to reach me for now: say hi on GitHub, or open an issue on any repo.", 15, SILVER, SOFT)
-    nt, _ = hand(40, 183, "buttons are right below, they don't bite.", 13, SILVER, extra='opacity=".7"')
-    b += nt + cat_face(900, 124, 1.0) + heart(840, 68, 10) + sparkle(960, 40, 6)
+    b += cat_face(900, 112, 1.0) + heart(840, 58, 10) + sparkle(960, 40, 6)
     save("contact.svg", svg(W, H, b))
 
 def button(name, label, c, glyph, W=138):
@@ -730,15 +580,14 @@ def g_repo(c): return (f'<rect x="24" y="11" width="16" height="19" rx="3" fill=
                        f'<path d="M28 16 h8 M28 21 h8" stroke="{c}" stroke-width="1.4" stroke-linecap="round"/>')
 
 def footer():
-    W, H = 1000, 150
+    W, H = 1000, 130
     msg = "okay bye, go look at my stuffs."
     t, tl = hand(500, 66, msg, 22, CREAM, "middle", 'font-weight="600"')
     b = f'<line x1="60" y1="60" x2="{500-tl/2-24:.0f}" y2="60" stroke="{LINE}" stroke-width="1.4" stroke-linecap="round"/><line x1="{500+tl/2+24:.0f}" y1="60" x2="940" y2="60" stroke="{LINE}" stroke-width="1.4" stroke-linecap="round"/>'
-    n, _ = hand(500, 118, "thanks for scrolling this far. the tabs are still open.", 12, SILVER, "middle", 'opacity=".7"')
-    b += flower(500, 38, 10, 5) + t + heart(500, 86, 12) + n
-    b += branch([(-10, 140), (80, 128), (170, 144), (250, 130)], 4, seed=22, density=.7, fr=9)
-    b += branch([(1010, 140), (920, 126), (830, 144), (750, 132)], 4, seed=23, density=.7, fr=9)
-    b += falling(W, H, 14, 33) + stars(W, H, 14, 34, avoid=(300, 30, 700, 130))
+    b += flower(500, 38, 10, 5) + t + heart(500, 88, 12)
+    b += branch([(-10, 122), (80, 110), (170, 126), (250, 112)], 4, seed=22, density=.7, fr=9)
+    b += branch([(1010, 122), (920, 108), (830, 126), (750, 114)], 4, seed=23, density=.7, fr=9)
+    b += falling(W, H, 12, 33) + stars(W, H, 12, 34, avoid=(300, 30, 700, 110))
     save("footer.svg", svg(W, H, b))
 
 # ======================================================================
@@ -773,10 +622,7 @@ def write_readme(main, featured, minis, mode):
             d = info(r)
             A(f'    <td width="{w}%" valign="top"><a href="{d["url"]}">' + img(f"mini-{i+1}.svg", f'{d["name"]}: {d["desc"]}') + "</a></td>")
         A("  </tr>\n</table>\n")
-    A(img("building.svg", "anyway, here's what i'm building") + "\n"); A(img("divider-4.svg") + "\n")
-    A(img("stats.svg", "tiny numbers from the chaos") + "\n")
-    A(img("contributions.svg", "planting little bits of me here: my real GitHub contributions over the last year") + "\n")
-    A(img("divider-5.svg") + "\n"); A(img("diary.svg", "developer diary: my latest real commits") + "\n")
+    A(img("divider-4.svg") + "\n")
     A(img("contact.svg", "wanna cook something weird?") + "\n")
     A(f'<div align="center">\n  <a href="https://github.com/{PROFILE_LOGIN}">' + img("btn-github.svg", "github", None).replace(' width="None"', ' height="40"') + '</a>\n'
       f'  <a href="https://github.com/{PROFILE_LOGIN}?tab=repositories">' + img("btn-repos.svg", "repositories", None).replace(' width="None"', ' height="40"') + '</a>\n</div>\n')
@@ -792,27 +638,13 @@ def build(live):
     pinned = live["pinned"] if live else []
     main, featured, minis, pool = select(repos, pinned)
     hero()
-    divider("divider-1.svg", "psst. you're still here? good.", 1)
-    divider("divider-2.svg", "petals included. no refunds.", 2)
-    divider("divider-3.svg", "tab count: classified.", 3)
-    divider("divider-4.svg", "status: the pro of procrastinate.", 4)
-    divider("divider-5.svg", "small ideas. big chaos.", 5)
+    for i in range(1, 5): divider(f"divider-{i}.svg", i)
     about(); tools(); poking()
-    section_header("header-projects.svg", "look what i made.", "pulled live from my real repos. every card links to the real thing.", 2)
+    section_header("header-projects.svg", "look what i made.", None, 2)
     if main: oneiric_spotlight(info(main))
     for i, r in enumerate(featured): project_card(i, info(r), ACCENTS[i % 5])
-    if minis: section_header("header-more.svg", "also in the pile.", "smaller builds that still count.", 5)
+    if minis: section_header("header-more.svg", "also in the pile.", None, 5)
     for i, r in enumerate(minis): mini_card(i, info(r), ACCENTS[i % 2])
-    # "building": main project first, then whatever I pushed to most recently
-    recent = sorted([r for r in pool if r is not main], key=lambda r: r["pushed"] or "", reverse=True) if live else [r for r in pool if r is not main]
-    rows = []
-    for r in ([main] if main else []) + recent[:2]:
-        d = info(r)
-        rows.append((d["name"], d["desc"], "main project" if r is main else (f'pushed {d["updated"]}' if d["updated"] else d["badge"])))
-    building(rows)
-    stats(live["stats"] if live else FALLBACK_STATS, bool(live))
-    contributions(live["calendar"] if live else None)
-    diary(live["commits"] if live else [])
     contact(); footer()
     button("btn-github.svg", "github", LAV, g_gh)
     button("btn-repos.svg", "repositories", SAKURA, g_repo, 170)
