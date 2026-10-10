@@ -50,8 +50,8 @@
 <img src="assets/contact.svg" alt="wanna cook something weird?" width="100%">
 
 <div align="center">
-  <a href="https://github.com/mehroofsaba"><img src="assets/btn-github.svg" alt="github" height="40"></a>
-  <a href="https://github.com/mehroofsaba?tab=repositories"><img src="assets/btn-repos.svg" alt="repositories" height="40"></a>
+  <a href="https://www.linkedin.com/in/mehroof-saba-295484329/"><img src="assets/btn-linkedin.svg" alt="linkedin" height="40"></a>
+  <a href="https://leetcode.com/u/MEHroof/"><img src="assets/btn-leetcode.svg" alt="leetcode" height="40"></a>
 </div>
 
 <img src="assets/footer.svg" alt="okay bye, go look at my stuffs." width="100%">

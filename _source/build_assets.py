@@ -28,6 +28,8 @@ PROFILE_LOGIN = os.environ.get("PROFILE_LOGIN", "mehroofsaba")
 MAIN_PROJECT = "Oneiric"          # gets the big spotlight card
 PILE_PROJECTS = ["Calculator", "ChessMaster"]   # always shown in "also in the pile"
 HIDDEN_PROJECTS = ["Portfolio"]                 # never shown (add a repo name here to hide it)
+LINKEDIN_URL = "https://www.linkedin.com/in/mehroof-saba-295484329/"
+LEETCODE_URL = "https://leetcode.com/u/MEHroof/"
 
 # Static personality (these are YOUR choices, so they are not pulled from GitHub)
 TOOLS = ["Java", "Spring Boot", "JavaScript", "React", "HTML", "CSS", "C++", "Tauri", "Node.js"]
@@ -568,7 +570,7 @@ def contact():
     b += card_title("wanna cook something weird?", y=48, size=26)
     b += text(40, 94, "Let's talk about projects, ideas, collaborations, open source,", 17, CREAM, SOFT)
     b += text(40, 120, "or just interesting things to build.", 17, CREAM, SOFT)
-    b += text(40, 154, "Easiest way to reach me for now: say hi on GitHub, or open an issue on any repo.", 15, SILVER, SOFT)
+    b += text(40, 154, "Easiest ways to reach me: LinkedIn, or open an issue on any of my repos.", 15, SILVER, SOFT)
     b += cat_face(900, 112, 1.0) + heart(840, 58, 10) + sparkle(960, 40, 6)
     save("contact.svg", svg(W, H, b))
 
@@ -579,6 +581,10 @@ def button(name, label, c, glyph, W=138):
     save(name, svg(W, H, b))
 
 def g_gh(c): return f'<circle cx="32" cy="20" r="10" fill="none" stroke="{c}" stroke-width="1.6"/>' + flower(32, 20, 5, 0, c, .9)
+def g_in(c): return (f'<rect x="22" y="10" width="20" height="20" rx="5" fill="none" stroke="{c}" stroke-width="1.6"/>'
+                     f'<text x="32" y="25" font-family="{SOFT}" font-size="11" font-weight="700" fill="{c}" text-anchor="middle">in</text>')
+def g_lc(c): return (f'<path d="M30 11 l-8 9 l8 9" fill="none" stroke="{c}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'
+                     f'<path d="M34 29 h8" stroke="{c}" stroke-width="1.8" stroke-linecap="round"/>')
 def g_repo(c): return (f'<rect x="24" y="11" width="16" height="19" rx="3" fill="none" stroke="{c}" stroke-width="1.6"/>'
                        f'<path d="M28 16 h8 M28 21 h8" stroke="{c}" stroke-width="1.4" stroke-linecap="round"/>')
 
@@ -627,8 +633,8 @@ def write_readme(main, featured, minis, mode):
         A("  </tr>\n</table>\n")
     A(img("divider-4.svg") + "\n")
     A(img("contact.svg", "wanna cook something weird?") + "\n")
-    A(f'<div align="center">\n  <a href="https://github.com/{PROFILE_LOGIN}">' + img("btn-github.svg", "github", None).replace(' width="None"', ' height="40"') + '</a>\n'
-      f'  <a href="https://github.com/{PROFILE_LOGIN}?tab=repositories">' + img("btn-repos.svg", "repositories", None).replace(' width="None"', ' height="40"') + '</a>\n</div>\n')
+    A(f'<div align="center">\n  <a href="{LINKEDIN_URL}"><img src="assets/btn-linkedin.svg" alt="linkedin" height="40"></a>\n'
+      f'  <a href="{LEETCODE_URL}"><img src="assets/btn-leetcode.svg" alt="leetcode" height="40"></a>\n</div>\n')
     A(img("footer.svg", "okay bye, go look at my stuffs.") + "\n")
     with open(os.path.join(OUT, "..", "README.md"), "w", encoding="utf-8") as f:
         f.write("\n".join(L))
@@ -649,8 +655,8 @@ def build(live):
     if minis: section_header("header-more.svg", "also in the pile.", None, 5)
     for i, r in enumerate(minis): mini_card(i, info(r), ACCENTS[i % 2])
     contact(); footer()
-    button("btn-github.svg", "github", LAV, g_gh)
-    button("btn-repos.svg", "repositories", SAKURA, g_repo, 170)
+    button("btn-linkedin.svg", "linkedin", LAV, g_in, 150)
+    button("btn-leetcode.svg", "leetcode", SAKURA, g_lc, 150)
     write_readme(main, featured, minis, "live from GitHub" if live else "offline fallback (no token)")
     print("live data:", "yes" if live else "no (fallback)", "|", len(os.listdir(OUT)), "svgs | readme written")
 
