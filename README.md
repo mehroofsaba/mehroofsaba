@@ -29,10 +29,10 @@
 
 <table>
   <tr>
-    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/TaskPetal"><img src="assets/project-1.svg" alt="TaskPetal: Description coming soon." width="100%"></a></td>
-    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/Detour"><img src="assets/project-2.svg" alt="Detour: Description coming soon." width="100%"></a></td>
-    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/Floof"><img src="assets/project-3.svg" alt="Floof: Description coming soon." width="100%"></a></td>
-    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/Hacktoberfest"><img src="assets/project-4.svg" alt="BugBite: Paste code, pick a language, get a plain explanation of what&#x27;s wrong and how to fix it." width="100%"></a></td>
+    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/skills-introduction-to-repository-management"><img src="assets/project-1.svg" alt="skills-introduction-to-repository-management: Description coming soon." width="100%"></a></td>
+    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/TaskPetal"><img src="assets/project-2.svg" alt="TaskPetal: Description coming soon." width="100%"></a></td>
+    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/Detour"><img src="assets/project-3.svg" alt="Detour: Description coming soon." width="100%"></a></td>
+    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/Floof"><img src="assets/project-4.svg" alt="Floof: Description coming soon." width="100%"></a></td>
   </tr>
 </table>
 
