@@ -5,7 +5,7 @@
 -->
 
 <div align="center">
-  <img src="assets/hero.svg" alt="I should probably stop making things." width="100%">
+  <img src="assets/hero.svg" alt="I should probably stop making things. Anyway, here's what I'm building." width="100%">
 </div>
 
 <img src="assets/divider-1.svg" alt="" width="100%">
@@ -29,10 +29,10 @@
 
 <table>
   <tr>
-    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/The-Midnight-Door"><img src="assets/project-1.svg" alt="The-Midnight-Door: Description coming soon." width="100%"></a></td>
-    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/skills-getting-started-with-github-copilot"><img src="assets/project-2.svg" alt="skills-getting-started-with-github-copilot: Exercise: Get started using GitHub Copilot" width="100%"></a></td>
-    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/skills-introduction-to-repository-management"><img src="assets/project-3.svg" alt="skills-introduction-to-repository-management: Description coming soon." width="100%"></a></td>
-    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/TaskPetal"><img src="assets/project-4.svg" alt="TaskPetal: Description coming soon." width="100%"></a></td>
+    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/skills-code-with-codespaces"><img src="assets/project-1.svg" alt="skills-code-with-codespaces: Exercise: Code with Codespaces" width="100%"></a></td>
+    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/skills-introduction-to-repository-management"><img src="assets/project-2.svg" alt="skills-introduction-to-repository-management: Description coming soon." width="100%"></a></td>
+    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/The-Midnight-Door"><img src="assets/project-3.svg" alt="The-Midnight-Door: Description coming soon." width="100%"></a></td>
+    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/skills-getting-started-with-github-copilot"><img src="assets/project-4.svg" alt="skills-getting-started-with-github-copilot: Exercise: Get started using GitHub Copilot" width="100%"></a></td>
   </tr>
 </table>
 
