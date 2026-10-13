@@ -5,7 +5,7 @@
 -->
 
 <div align="center">
-  <img src="assets/hero.svg" alt="I should probably stop making things. Anyway, here's what I'm building." width="100%">
+  <img src="assets/hero.svg" alt="I should probably stop making things." width="100%">
 </div>
 
 <img src="assets/divider-1.svg" alt="" width="100%">
