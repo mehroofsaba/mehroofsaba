@@ -29,10 +29,10 @@
 
 <table>
   <tr>
-    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/Bizcuits"><img src="assets/project-1.svg" alt="Bizcuits: Description coming soon." width="100%"></a></td>
-    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/AfterHours"><img src="assets/project-2.svg" alt="AfterHours: Description coming soon." width="100%"></a></td>
-    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/Detour"><img src="assets/project-3.svg" alt="Detour: Description coming soon." width="100%"></a></td>
-    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/Slothy"><img src="assets/project-4.svg" alt="Slothy: Description coming soon." width="100%"></a></td>
+    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/Digital-Herbarium"><img src="assets/project-1.svg" alt="Digital-Herbarium: Description coming soon." width="100%"></a></td>
+    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/Bizcuits"><img src="assets/project-2.svg" alt="Bizcuits: Description coming soon." width="100%"></a></td>
+    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/AfterHours"><img src="assets/project-3.svg" alt="AfterHours: Description coming soon." width="100%"></a></td>
+    <td width="25%" valign="top"><a href="https://github.com/mehroofsaba/Detour"><img src="assets/project-4.svg" alt="Detour: Description coming soon." width="100%"></a></td>
   </tr>
 </table>
 
