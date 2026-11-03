@@ -545,7 +545,7 @@ def build_projects(written):
         write(name, doc)
         written.add(name)
 
-    emit("header-projects.svg", header("03 / PROJECTS & ACTIVITY", "Things I’ve been building.", SUBTITLE_3, False))
+emit("header-projects.svg", header("03 / PROJECTS & ACTIVITY", "Things I’ve been building.", "", False))
     emit("head-repositories.svg", subhead("Repositories"))
     emit("head-activity.svg", subhead("Recent Activity"))
     emit("head-contributions.svg", subhead("Contribution Activity"))
