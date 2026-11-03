@@ -545,13 +545,13 @@ def build_projects(written):
         write(name, doc)
         written.add(name)
 
-emit("header-projects.svg", header("03 / PROJECTS & ACTIVITY", "Things I’ve been building.", "", False))
+    emit("header-projects.svg", header("03 / PROJECTS & ACTIVITY", "Things I’ve been building.", "", False))
     emit("head-repositories.svg", subhead("Repositories"))
     emit("head-activity.svg", subhead("Recent Activity"))
     emit("head-contributions.svg", subhead("Contribution Activity"))
     emit("explore.svg", explore_button())
 
-    parts = [img(G + "header-projects.svg", f"Things I’ve been building. {SUBTITLE_3}", "100%"), ""]
+    parts = [img(G + "header-projects.svg", "Things I’ve been building.", "100%"), ""]
     parts += [img(G + "head-repositories.svg", "Repositories", "100%"), "", '<p align="center">']
     for i, r in enumerate(repos, 1):
         name = f"project-{i:02d}.svg"
