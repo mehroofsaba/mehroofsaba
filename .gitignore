@@ -1,0 +1,4 @@
+# Berghan is a licensed font: never commit it
+fonts/Berghan*
+Berghan-subset*
+__pycache__/

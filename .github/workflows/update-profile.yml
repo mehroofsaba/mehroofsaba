@@ -1,0 +1,51 @@
+name: Update Projects & Activity
+
+on:
+  schedule:
+    - cron: "0 */4 * * *" # every four hours
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/update_profile.py"
+      - ".github/workflows/update-profile.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-profile
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install fonttools
+
+      - name: Generate Projects & Activity and Tech Stack
+        env:
+          GH_USER: ${{ github.repository_owner }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # built-in; only used to avoid API rate limits
+          BERGHAN_FONT_B64: ${{ secrets.BERGHAN_FONT_B64 }}
+
+        run: python scripts/update_profile.py
+
+      - name: Commit only if something changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md assets/generated
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: refresh projects & activity"
+            git push
+          fi
