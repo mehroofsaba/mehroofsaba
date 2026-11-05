@@ -13,12 +13,8 @@ Data sources (public data only):
                              if anything looks off the heatmap is not drawn.
 
 Typography
-  Everything is drawn as vector outlines, so it looks identical on every device.
-  Headings use Berghan. Berghan is a licensed font, so it is never committed to the repo.
-  Provide it in ONE of these ways (see scripts/SETUP.md):
-    - env BERGHAN_FONT_B64  (GitHub Actions secret, base64 of a subset font), or
-    - a local file fonts/Berghan.otf|ttf (git-ignored) when running on your own machine.
-  Without it the script still works and falls back to Jost (open licence).
+  Everything is drawn as vector outlines using the Jost Light and Regular fonts
+  committed in the repository under fonts/.
 
 Only the blocks between the marker comments in README.md are rewritten, so the Hero and
 About sections are never touched. Output is deterministic (no timestamps), so the
@@ -26,7 +22,6 @@ workflow commits only when something really changed.
 """
 import base64
 import datetime as dt
-import io
 import json
 import math
 import os
@@ -50,18 +45,21 @@ USER = os.environ.get("GH_USER") or os.environ.get("GITHUB_REPOSITORY_OWNER") or
 TOKEN = os.environ.get("GH_TOKEN", "")
 
 # ---- things you may want to edit -------------------------------------------
-
 TAGLINE_4 = "the tools in my little universe."
 SIGNOFF = "i’ll be here, probably fixing something."
 LEETCODE_URL = "https://leetcode.com/u/MEHroof/"
 INSTAGRAM_URL = "https://www.instagram.com/ms_37ann/"
 LINKEDIN_URL = "https://www.linkedin.com/in/mehroof-saba-295484329/"
 
-MAX_REPOS = int(os.environ.get("MAX_REPOS", "0"))  # 0 = show every repository
-EXCLUDE = {x.strip().lower() for x in os.environ.get("EXCLUDE_REPOS", "").split(",") if x.strip()}
-COMMITS_SHOWN = 8
+MAX_REPOS = 6
+COMMITS_SHOWN = 6
 REPOS_SCANNED_FOR_COMMITS = 15
-DISPLAY_STROKE = 0.3  # px; Berghan is very thin, this keeps small sizes legible. Set 0 to disable.
+DISPLAY_STROKE = 0   # Set to 0 to disable outline strokes.
+EXCLUDE = {
+    x.strip().lower()
+    for x in os.environ.get("EXCLUDE_REPOS", "").split(",")
+    if x.strip()
+}
 
 # ---- palette (sampled from the Hero / About images) ------------------------
 BG = "#000000"
@@ -101,27 +99,10 @@ class Face:
         return pen.getCommands()
 
 
-def load_berghan():
-    b64 = os.environ.get("BERGHAN_FONT_B64", "").strip()
-    try:
-        if b64:
-            return Face(TTFont(io.BytesIO(base64.b64decode(b64))))
-        for ext in ("otf", "ttf"):
-            p = FONTS / f"Berghan.{ext}"
-            if p.exists():
-                return Face(TTFont(str(p)))
-    except Exception as e:
-        print(f"WARNING: could not load Berghan ({e}).", file=sys.stderr)
-    return None
-
-
-BERGHAN = load_berghan()
 JOST_L = Face(TTFont(str(FONTS / "Jost-Light.ttf")))
 JOST_R = Face(TTFont(str(FONTS / "Jost-Regular.ttf")))
-if BERGHAN is None:
-    print("WARNING: Berghan not found, headings fall back to Jost. See scripts/SETUP.md.", file=sys.stderr)
 
-DISPLAY = ([BERGHAN] if BERGHAN else []) + [JOST_R]
+DISPLAY = [JOST_L]
 BODYF = [JOST_L, JOST_R]
 LABEL = [JOST_R]
 
@@ -280,47 +261,99 @@ def request_text(url):
 
 def get_repos():
     repos, page = [], 1
+
     while True:
-        batch = request(f"https://api.github.com/users/{USER}/repos?type=owner&sort=pushed&per_page=100&page={page}")
-        repos += batch
+        url = (
+            f"https://api.github.com/users/{USER}/repos"
+            f"?type=owner&sort=pushed&per_page=100&page={page}"
+        )
+        batch = request(url)
+        repos.extend(batch)
+
         if len(batch) < 100:
             break
+
         page += 1
+
     keep = []
+
     for r in repos:
         if r.get("private") or r.get("fork"):
             continue
-        if r["name"].lower() in EXCLUDE or r["name"].lower() == USER.lower():
+
+        if r["name"].lower() in EXCLUDE:
             continue
+
+        if r["name"].lower() == USER.lower():
+            continue
+
         stamp = r.get("pushed_at") or r.get("updated_at")
+
         if not stamp:
             continue
+
         r["_active"] = parse_dt(stamp)
         keep.append(r)
-    keep.sort(key=lambda r: r["_active"], reverse=True)
-    return keep[:MAX_REPOS] if MAX_REPOS > 0 else keep
+
+    keep.sort(
+        key=lambda r: r["_active"],
+        reverse=True
+    )
+
+    return keep
 
 
 def get_commits(repos):
     found = []
+
     for r in repos[:REPOS_SCANNED_FOR_COMMITS]:
         try:
-            items = request(f"https://api.github.com/repos/{USER}/{r['name']}/commits?author={USER}&per_page=5")
+            url = (
+                f"https://api.github.com/repos/{USER}/{r['name']}"
+                f"/commits?author={USER}&per_page=5"
+            )
+            items = request(url)
+
         except urllib.error.HTTPError:
-            continue  # empty repository or no access
+            continue
+
         for c in items:
             commit = c["commit"]
-            found.append(
-                {
-                    "repo": r["name"],
-                    "message": commit["message"].split("\n")[0],
-                    "date": parse_dt(commit["author"]["date"] or commit["committer"]["date"]),
-                    "sha": c["sha"][:7],
-                    "url": c["html_url"],
-                }
-            )
-    found.sort(key=lambda c: c["date"], reverse=True)
-    return found[:COMMITS_SHOWN]
+            author = commit.get("author") or {}
+            committer = commit.get("committer") or {}
+            commit_date = author.get("date") or committer.get("date")
+
+            if not commit_date:
+                continue
+
+            found.append({
+                "repo": r["name"],
+                "message": commit["message"].split("\n")[0],
+                "date": parse_dt(commit_date),
+                "sha": c["sha"][:7],
+                "url": c["html_url"],
+            })
+
+    found.sort(
+        key=lambda c: c["date"],
+        reverse=True
+    )
+
+    # First pass: one recent commit per repository.
+    selected = []
+    seen = set()
+
+    for commit in found:
+        repo_name = commit["repo"].lower()
+
+        if repo_name not in seen:
+            selected.append(commit)
+            seen.add(repo_name)
+
+        if len(selected) >= COMMITS_SHOWN:
+            break
+
+    return selected
 
 
 def parse_calendar(html):
@@ -360,32 +393,53 @@ def get_calendar():
     return parse_calendar(request_text(f"https://github.com/users/{USER}/contributions"))
 
 
-# ---- shared page pieces ----------------------------------------------------
 def divider(doc, y):
-    doc.raw(f'<rect x="0" y="{y}" width="360" height="1" fill="url(#fade)"/>')
-    doc.raw(f'<rect x="440" y="{y}" width="360" height="1" fill="url(#fade)"/>')
-    doc.sparkle(400, y, 9, HEAD)
+    doc.raw(
+        f'<rect x="40" y="{y}" width="720" '
+        f'height="1" fill="{BORDER}"/>'
+    )
 
 
-def header(label, heading, tagline, tagline_sparkle):
-    doc = Doc(800, 240, f"{heading} {tagline}")
-    if label:
-        w = doc.text(4, 30, label, 13, BODY, LABEL, spacing=4)
-        doc.raw(f'<rect x="{4 + w + 20}" y="25" width="{796 - (4 + w + 20)}" height="1" fill="{BORDER}"/>')
-    size = fit(heading, 62, DISPLAY, 790)
-    doc.text(2, 128, heading, size, HEAD, DISPLAY, stroke=DISPLAY_STROKE if size < 40 else 0)
-    w = doc.text(4, 174, tagline, 19, BODY, BODYF, spacing=0.6)
-    if tagline_sparkle:
-        doc.sparkle(4 + w + 20, 167, 7, BLUSH)
-    divider(doc, 216)
+def header(
+    label=None,
+    heading="",
+    tagline="",
+    tagline_sparkle=False
+):
+    has_tagline = bool(tagline and tagline.strip())
+
+    doc = Doc(
+        800,
+        220 if has_tagline else 190,
+        f"{heading} {tagline}".strip()
+    )
+
+    size = fit(heading, 58, DISPLAY, 760)
+
+    doc.text(
+        400, 88, heading, size, HEAD, DISPLAY,
+        anchor="middle"
+    )
+
+    if has_tagline:
+        doc.text(
+            400, 128, tagline, 18, BODY, BODYF,
+            anchor="middle"
+        )
+
+    divider(doc, 165 if has_tagline else 145)
+
     return doc
 
 
-def subhead(title, size=30, h=56):
+def subhead(title, size=27, h=58):
     doc = Doc(800, h, title)
-    w = doc.text(4, h - 18, title, size, HEAD, DISPLAY, stroke=DISPLAY_STROKE)
-    x = 4 + w + 22
-    doc.raw(f'<rect x="{x:.0f}" y="{h - 18 - size * 0.32:.0f}" width="{796 - x:.0f}" height="1" fill="{BORDER}"/>')
+
+    doc.text(
+        400, h - 18, title, size, HEAD, DISPLAY,
+        anchor="middle"
+    )
+
     return doc
 
 
@@ -439,28 +493,52 @@ def levels(days):
 
 
 def heat_panel(weeks, level, footer, period):
-    doc = Doc(392, 162, "Contribution heatmap")
-    left, top, pitch, size = 38, 40, 12.5, 10.5
-    doc.raw(f'<rect x="1" y="1" width="390" height="160" rx="14" fill="{CARD}" stroke="{BORDER}"/>')
+    doc = Doc(800, 174, "Contribution heatmap")
+
+    left, top, pitch, size = 40, 43, 13.5, 10.5
+
+    doc.raw(
+        f'<rect x="1" y="1" width="798" height="172" '
+        f'rx="14" fill="{CARD}" stroke="{BORDER}"/>'
+    )
+
     for row, name in ((1, "Mon"), (3, "Wed"), (5, "Fri")):
-        doc.text(left - 8, top + row * pitch + 9, name, 11, MUTED, LABEL, anchor="end")
-    last, prev = -99, None
-    for c, week in enumerate(weeks):
-        month = week[-1]["date"].month if c == 0 else week[0]["date"].month
-        if month != prev and c - last >= 3:
-            doc.text(left + c * pitch, 28, f'{week[-1 if c == 0 else 0]["date"]:%b}', 12, BODY, LABEL)
-            last = c
-        prev = month
-        for d in week:
-            x, y = left + c * pitch, top + d["weekday"] * pitch
-            doc.raw(f'<rect x="{x}" y="{y}" width="{size}" height="{size}" rx="2" fill="{HEAT[level(d["count"])]}"/>')
-    if footer == "period":
-        doc.text(20, 148, period, 12, MUTED, BODYF)
-    else:
-        doc.text(243, 148, "Less", 12, MUTED, BODYF)
-        for n, col in enumerate(HEAT):
-            doc.raw(f'<rect x="{275 + n * 13}" y="139" width="10" height="10" rx="2" fill="{col}"/>')
-        doc.text(346, 148, "More", 12, MUTED, BODYF)
+        doc.text(
+            left - 9,
+            top + row * pitch + 9,
+            name, 11, MUTED, LABEL,
+            anchor="end"
+        )
+
+   
+    previous_month = None
+
+    for col, week in enumerate(weeks):
+        for day in week:
+            date = day["date"]
+
+            # Label each month only once, including the first partial month.
+            month_key = (date.year, date.month)
+            if month_key != previous_month:
+                doc.text(
+                    left + col * pitch,
+                    28,
+                    date.strftime("%b"),
+                    11, BODY, LABEL
+                )
+                previous_month = month_key
+
+            x = left + col * pitch
+            y = top + day["weekday"] * pitch
+
+            doc.raw(
+                f'<rect x="{x:.1f}" y="{y:.1f}" '
+                f'width="{size}" height="{size}" '
+                f'rx="2" fill="{HEAT[level(day["count"])]}"/>'
+            )
+
+    doc.text(735, 155, "More", 12, MUTED, BODYF)
+
     return doc
 
 
@@ -474,16 +552,27 @@ def stat_card(number, label):
 
 def streaks(days):
     longest = run = 0
+
     for d in days:
         run = run + 1 if d["count"] > 0 else 0
         longest = max(longest, run)
+
     i = len(days) - 1
-    if i >= 0 and days[i]["count"] == 0:
-        i -= 1  # today may simply not have happened yet
+
+    # Skip today only if it has no contributions yet.
+    if (
+        i >= 0
+       and days[i]["date"] == dt.date.today()
+        and days[i]["count"] == 0
+    ):
+        i -= 1
+
     current = 0
+
     while i >= 0 and days[i]["count"] > 0:
         current += 1
         i -= 1
+
     return current, longest
 
 
@@ -533,107 +622,253 @@ G = "assets/generated/"
 
 
 def build_projects(written):
-    repos = get_repos()
-    commits = get_commits(repos)
+    all_repos = get_repos()
+    commits = get_commits(all_repos)
+    repos = all_repos[:MAX_REPOS]
+
     try:
         cal = get_calendar()
     except Exception as e:
-        print(f"WARNING: contribution heatmap not updated ({e}).", file=sys.stderr)
+        print(
+            f"WARNING: contribution heatmap not updated ({e}).",
+            file=sys.stderr
+        )
         cal = None
 
     def emit(name, doc):
         write(name, doc)
         written.add(name)
 
-    emit("header-projects.svg", header("03 / PROJECTS & ACTIVITY", "Things I’ve been building.", "", False))
+    # Page heading and section headings
+    emit(
+        "header-projects.svg",
+        header(None, "Things I’ve been building.", "", False)
+    )
     emit("head-repositories.svg", subhead("Repositories"))
     emit("head-activity.svg", subhead("Recent Activity"))
     emit("head-contributions.svg", subhead("Contribution Activity"))
-    emit("explore.svg", explore_button())
 
-    parts = [img(G + "header-projects.svg", "Things I’ve been building.", "100%"), ""]
-    parts += [img(G + "head-repositories.svg", "Repositories", "100%"), "", '<p align="center">']
+    parts = [
+        img(
+            G + "header-projects.svg",
+            "Things I’ve been building.",
+            "100%"
+        ),
+        "",
+        img(G + "head-repositories.svg", "Repositories", "100%"),
+        "",
+        '<p align="center">'
+    ]
+
+    # Six latest eligible public repositories
     for i, r in enumerate(repos, 1):
         name = f"project-{i:02d}.svg"
         emit(name, project_card(i, r))
-        alt = r["name"] + (f' — {r["description"]}' if r.get("description") else "")
-        parts.append(f'<a href="{attr(r["html_url"])}">{img(G + name, alt, 392)}</a>')
+
+        alt = r["name"] + (
+            f' — {r["description"]}'
+            if r.get("description") else ""
+        )
+
+        parts.append(
+            f'<a href="{attr(r["html_url"])}">'
+            f'{img(G + name, alt, 392)}</a>'
+        )
+
     parts += ["</p>", ""]
 
+    # Recent commits across different repositories
     if commits:
-        parts += [img(G + "head-activity.svg", "Recent Activity", "100%"), "", '<p align="center">']
+        parts += [
+            img(G + "head-activity.svg", "Recent Activity", "100%"),
+            "",
+            '<p align="center">'
+        ]
+
         for i, c in enumerate(commits, 1):
             name = f"commit-{i:02d}.svg"
             emit(name, commit_card(c))
-            parts.append(f'<a href="{attr(c["url"])}">{img(G + name, c["repo"] + ": " + c["message"], 392)}</a>')
+
+            parts.append(
+                f'<a href="{attr(c["url"])}">'
+                f'{img(G + name, c["repo"] + ": " + c["message"], 392)}'
+                f'</a>'
+            )
+
         parts += ["</p>", ""]
 
-    heat_files = ["heat-1.svg", "heat-2.svg", "stat-1.svg", "stat-2.svg", "stat-3.svg", "stat-4.svg"]
+    # One continuous contribution heatmap
+    heat_files = [
+        "heatmap.svg",
+        "stat-1.svg",
+        "stat-2.svg",
+        "stat-3.svg",
+        "stat-4.svg"
+    ]
+
     if cal:
         days = cal["days"]
-        period = f'{fmt_date(days[0]["date"])} – {fmt_date(days[-1]["date"])}'
+
+        period = (
+            f'{fmt_date(days[0]["date"])} – '
+            f'{fmt_date(days[-1]["date"])}'
+        )
+
         level = levels(days)
-        half = math.ceil(len(cal["weeks"]) / 2)
-        emit("heat-1.svg", heat_panel(cal["weeks"][:half], level, "period", period))
-        emit("heat-2.svg", heat_panel(cal["weeks"][half:], level, "legend", period))
+
+        emit(
+            "heatmap.svg",
+            heat_panel(cal["weeks"], level, "legend", period)
+        )
+
         current, longest = streaks(days)
         active = sum(1 for d in days if d["count"] > 0)
+
         stats = [
             (f'{cal["total"]:,}', "contributions"),
             (str(current), "day current streak"),
             (str(longest), "day longest streak"),
             (str(active), "active days"),
         ]
+
         for n, (num, lab) in enumerate(stats, 1):
             emit(f"stat-{n}.svg", stat_card(num, lab))
+
+    # Keep previously generated genuine data if GitHub fetch fails
     if cal or all((OUT / f).exists() for f in heat_files):
-        written.update(heat_files)  # on a failed fetch the last genuine heatmap is kept
-        parts += [img(G + "head-contributions.svg", "Contribution Activity", "100%"), "", '<p align="center">']
-        parts.append(img(G + "heat-1.svg", "Contribution heatmap, first half of the period", 392))
-        parts.append(img(G + "heat-2.svg", "Contribution heatmap, second half of the period", 392))
-        parts += ["</p>", '<p align="center">']
-        for n, lab in enumerate(["contributions", "current streak", "longest streak", "active days"], 1):
+        written.update(heat_files)
+
+        parts += [
+            img(
+                G + "head-contributions.svg",
+                "Contribution Activity",
+                "100%"
+            ),
+            "",
+            '<p align="center">',
+            img(
+                G + "heatmap.svg",
+                "Continuous contribution heatmap",
+                800
+            ),
+            "</p>",
+            '<p align="center">'
+        ]
+
+        for n, lab in enumerate(
+            [
+                "contributions",
+                "current streak",
+                "longest streak",
+                "active days"
+            ],
+            1
+        ):
             parts.append(img(f"{G}stat-{n}.svg", lab, 190))
+
         parts += ["</p>", ""]
 
-    parts += [
-        '<p align="center">',
-        f'<a href="https://github.com/{USER}?tab=repositories">{img(G + "explore.svg", "Explore all repositories", 392)}</a>',
-        "</p>",
-    ]
-    print(f"{len(repos)} repositories, {len(commits)} commits, heatmap: {'updated' if cal else 'kept or omitted'}")
-    return "\n".join(parts)
+    print(
+        f"{len(repos)} repositories, {len(commits)} commits, "
+        f"heatmap: {'updated' if cal else 'kept or omitted'}"
+    )
 
+    return "\n".join(parts)
 
 def build_tech(written):
     def emit(name, doc):
         write(name, doc)
         written.add(name)
 
-    emit("header-tech.svg", header(None, "04. Tech Stack & Connect", TAGLINE_4, True))
-    emit("head-techstack.svg", subhead("Tech Stack"))
-    emit("head-languages.svg", subhead("Languages", 23, 44))
-    emit("head-frameworks.svg", subhead("Frameworks & Technologies", 23, 44))
-    emit("head-connect.svg", subhead("Find me around the internet"))
+    # Clean, centered page heading
+    emit(
+        "header-tech.svg",
+        header(None, "Tech Stack & Connect", TAGLINE_4)
+    )
+
+    emit(
+        "head-languages.svg",
+        subhead("Languages", 25, 52)
+    )
+
+    emit(
+        "head-frameworks.svg",
+        subhead("Frameworks & Technologies", 25, 52)
+    )
+
+    emit(
+        "head-connect.svg",
+        subhead("Find me around the internet", 25, 58)
+    )
+
     emit("signoff.svg", signoff())
 
-    parts = [img(G + "header-tech.svg", f"04. Tech Stack & Connect. {TAGLINE_4}", "100%"), ""]
-    parts += [img(G + "head-techstack.svg", "Tech Stack", "100%"), ""]
-    for head, alt, items in (("head-languages.svg", "Languages", LANGUAGES), ("head-frameworks.svg", "Frameworks & Technologies", FRAMEWORKS)):
-        parts += [img(G + head, alt, "100%"), "", '<p align="center">']
-        for name, icon in items:
-            fn = f"tile-{icon}.svg"
-            emit(fn, tile(name, icon))
-            parts.append(img(G + fn, name, 100))
-        parts += ["</p>", ""]
-    parts += [img(G + "head-connect.svg", "Find me around the internet", "100%"), "", '<p align="center">']
+    parts = [
+        img(
+            G + "header-tech.svg",
+            "Tech Stack & Connect",
+            "100%"
+        ),
+        "",
+        img(G + "head-languages.svg", "Languages", "100%"),
+        "",
+        '<p align="center">'
+    ]
+
+    # Languages
+    for name, icon in LANGUAGES:
+        fn = f"tile-{icon}.svg"
+        emit(fn, tile(name, icon))
+        parts.append(img(G + fn, name, 100))
+
+    parts += [
+        "</p>",
+        "",
+        img(
+            G + "head-frameworks.svg",
+            "Frameworks & Technologies",
+            "100%"
+        ),
+        "",
+        '<p align="center">'
+    ]
+
+    # Frameworks and technologies
+    for name, icon in FRAMEWORKS:
+        fn = f"tile-{icon}.svg"
+        emit(fn, tile(name, icon))
+        parts.append(img(G + fn, name, 100))
+
+    parts += [
+        "</p>",
+        "",
+        img(
+            G + "head-connect.svg",
+            "Find me around the internet",
+            "100%"
+        ),
+        "",
+        '<p align="center">'
+    ]
+
+    # Social links
     for name, handle, icon, url in SOCIALS:
         fn = f"pill-{icon}.svg"
         emit(fn, pill(name, handle, icon))
-        parts.append(f'<a href="{attr(url)}">{img(G + fn, f"{name}: {handle}", 256)}</a>')
-    parts += ["</p>", "", img(G + "signoff.svg", SIGNOFF, "100%")]
-    return "\n".join(parts)
 
+        parts.append(
+            f'<a href="{attr(url)}">'
+            f'{img(G + fn, f"{name}: {handle}", 256)}'
+            f'</a>'
+        )
+
+    parts += [
+        "</p>",
+        "",
+        img(G + "signoff.svg", SIGNOFF, "100%")
+    ]
+
+    return "\n".join(parts)
 
 def main():
     written = set()
