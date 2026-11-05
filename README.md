@@ -14,40 +14,23 @@
 <a href="https://github.com/mehroofsaba/Detour"><img src="assets/generated/project-04.svg" alt="Detour" width="392"></a>
 <a href="https://github.com/mehroofsaba/Slothy"><img src="assets/generated/project-05.svg" alt="Slothy" width="392"></a>
 <a href="https://github.com/mehroofsaba/skills-code-with-codespaces"><img src="assets/generated/project-06.svg" alt="skills-code-with-codespaces — Exercise: Code with Codespaces" width="392"></a>
-<a href="https://github.com/mehroofsaba/skills-introduction-to-repository-management"><img src="assets/generated/project-07.svg" alt="skills-introduction-to-repository-management" width="392"></a>
-<a href="https://github.com/mehroofsaba/The-Midnight-Door"><img src="assets/generated/project-08.svg" alt="The-Midnight-Door" width="392"></a>
-<a href="https://github.com/mehroofsaba/skills-getting-started-with-github-copilot"><img src="assets/generated/project-09.svg" alt="skills-getting-started-with-github-copilot — Exercise: Get started using GitHub Copilot" width="392"></a>
-<a href="https://github.com/mehroofsaba/TaskPetal"><img src="assets/generated/project-10.svg" alt="TaskPetal" width="392"></a>
-<a href="https://github.com/mehroofsaba/Floof"><img src="assets/generated/project-11.svg" alt="Floof" width="392"></a>
-<a href="https://github.com/mehroofsaba/Hacktoberfest"><img src="assets/generated/project-12.svg" alt="Hacktoberfest" width="392"></a>
-<a href="https://github.com/mehroofsaba/Wobble"><img src="assets/generated/project-13.svg" alt="Wobble" width="392"></a>
-<a href="https://github.com/mehroofsaba/Portfolio"><img src="assets/generated/project-14.svg" alt="Portfolio" width="392"></a>
-<a href="https://github.com/mehroofsaba/CyberDefuse"><img src="assets/generated/project-15.svg" alt="CyberDefuse" width="392"></a>
-<a href="https://github.com/mehroofsaba/HissyHiss"><img src="assets/generated/project-16.svg" alt="HissyHiss" width="392"></a>
-<a href="https://github.com/mehroofsaba/Oneiric"><img src="assets/generated/project-17.svg" alt="Oneiric" width="392"></a>
-<a href="https://github.com/mehroofsaba/CampusConnect"><img src="assets/generated/project-18.svg" alt="CampusConnect" width="392"></a>
-<a href="https://github.com/mehroofsaba/ChessMaster"><img src="assets/generated/project-19.svg" alt="ChessMaster — Modern Java Chess game with move validation, check/checkmate detection, beautiful UI, and future AI &amp; multiplayer support." width="392"></a>
-<a href="https://github.com/mehroofsaba/Calculator"><img src="assets/generated/project-20.svg" alt="Calculator — A hello kitty themed calculator that can do scientific calculations, calculate tips, change units and the basic calculation. " width="392"></a>
 </p>
 
 <img src="assets/generated/head-activity.svg" alt="Recent Activity" width="100%">
 
 <p align="center">
 <a href="https://github.com/mehroofsaba/Digital-Herbarium/commit/a32f5962cfa0cb856e14e8a739a382287ace0beb"><img src="assets/generated/commit-01.svg" alt="Digital-Herbarium: Update README.md" width="392"></a>
-<a href="https://github.com/mehroofsaba/Digital-Herbarium/commit/79a6aef641a647ae1aef6e108e6f6f245d1231d5"><img src="assets/generated/commit-02.svg" alt="Digital-Herbarium: Add files via upload" width="392"></a>
-<a href="https://github.com/mehroofsaba/Digital-Herbarium/commit/15bbe021addf4b96d1722feaafc69c7b969c3b7d"><img src="assets/generated/commit-03.svg" alt="Digital-Herbarium: Create .gitkeep" width="392"></a>
-<a href="https://github.com/mehroofsaba/Digital-Herbarium/commit/74cb68db4a1f02d4d2667c0a8c09b62803e882e1"><img src="assets/generated/commit-04.svg" alt="Digital-Herbarium: Delete screenshots" width="392"></a>
-<a href="https://github.com/mehroofsaba/Digital-Herbarium/commit/a1e76fbe1797d4e2431a5f4aa5d5cdc7a2760820"><img src="assets/generated/commit-05.svg" alt="Digital-Herbarium: Revise README with comprehensive project details" width="392"></a>
-<a href="https://github.com/mehroofsaba/Bizcuits/commit/c62bec6ebbf55e4547f255d8cd1e303baac2800a"><img src="assets/generated/commit-06.svg" alt="Bizcuits: Update README.md" width="392"></a>
-<a href="https://github.com/mehroofsaba/Bizcuits/commit/7188eff1793bc979f9a6a7fdfce46de216a0503e"><img src="assets/generated/commit-07.svg" alt="Bizcuits: Add files via upload" width="392"></a>
-<a href="https://github.com/mehroofsaba/Bizcuits/commit/930be102f867a4aa902b4fdbb14a32950fc79a42"><img src="assets/generated/commit-08.svg" alt="Bizcuits: Create .gitkeep" width="392"></a>
+<a href="https://github.com/mehroofsaba/Bizcuits/commit/c62bec6ebbf55e4547f255d8cd1e303baac2800a"><img src="assets/generated/commit-02.svg" alt="Bizcuits: Update README.md" width="392"></a>
+<a href="https://github.com/mehroofsaba/AfterHours/commit/c875928f293906c8dc705b46185f38ad909486f5"><img src="assets/generated/commit-03.svg" alt="AfterHours: Update README.md" width="392"></a>
+<a href="https://github.com/mehroofsaba/Detour/commit/748cbca91cf16107c565c1eb25c005f57732e34f"><img src="assets/generated/commit-04.svg" alt="Detour: Add deployed link to README" width="392"></a>
+<a href="https://github.com/mehroofsaba/Slothy/commit/9648237b845ca50f2cc45b4db517bd0fae7d6c3f"><img src="assets/generated/commit-05.svg" alt="Slothy: Sync production build with updated frontend" width="392"></a>
+<a href="https://github.com/mehroofsaba/skills-code-with-codespaces/commit/0917e12d8fcaadaae415c74dd90639764403cf6c"><img src="assets/generated/commit-06.svg" alt="skills-code-with-codespaces: fix: incomplete hello message" width="392"></a>
 </p>
 
 <img src="assets/generated/head-contributions.svg" alt="Contribution Activity" width="100%">
 
 <p align="center">
-<img src="assets/generated/heat-1.svg" alt="Contribution heatmap, first half of the period" width="392">
-<img src="assets/generated/heat-2.svg" alt="Contribution heatmap, second half of the period" width="392">
+<img src="assets/generated/heatmap.svg" alt="Continuous contribution heatmap" width="800">
 </p>
 <p align="center">
 <img src="assets/generated/stat-1.svg" alt="contributions" width="190">
@@ -56,15 +39,10 @@
 <img src="assets/generated/stat-4.svg" alt="active days" width="190">
 </p>
 
-<p align="center">
-<a href="https://github.com/mehroofsaba?tab=repositories"><img src="assets/generated/explore.svg" alt="Explore all repositories" width="392"></a>
-</p>
 <!-- PROJECTS_ACTIVITY:END -->
 
 <!-- TECH_CONNECT:START -->
-<img src="assets/generated/header-tech.svg" alt="04. Tech Stack &amp; Connect. the tools in my little universe." width="100%">
-
-<img src="assets/generated/head-techstack.svg" alt="Tech Stack" width="100%">
+<img src="assets/generated/header-tech.svg" alt="Tech Stack &amp; Connect" width="100%">
 
 <img src="assets/generated/head-languages.svg" alt="Languages" width="100%">
 

@@ -155,8 +155,9 @@ def attr(s):
 
 
 class Doc:
-    def __init__(self, w, h, label):
+    def __init__(self, w, h, label, transparent=False):
         self.w, self.h, self.label = w, h, label
+        self.transparent = transparent
         self.defs, self.ids, self.body = [], {}, []
 
     def raw(self, s):
@@ -220,13 +221,14 @@ class Doc:
             )
 
     def build(self):
+        background = "" if self.transparent else f'<rect width="{self.w}" height="{self.h}" fill="{BG}"/>'
         return (
             f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
             f'width="{self.w}" height="{self.h}" viewBox="0 0 {self.w} {self.h}" role="img" '
             f'aria-label="{attr(self.label)}"><defs>{"".join(self.defs)}'
             f'<linearGradient id="fade" x1="0" x2="1"><stop offset="0" stop-color="{LINE}" stop-opacity="0"/>'
             f'<stop offset=".5" stop-color="{LINE}"/><stop offset="1" stop-color="{LINE}" stop-opacity="0"/></linearGradient>'
-            f'</defs><rect width="{self.w}" height="{self.h}" fill="{BG}"/>{"".join(self.body)}</svg>\n'
+            f'</defs>{background}{"".join(self.body)}</svg>\n'
         )
 
 
@@ -594,7 +596,7 @@ def tile(name, icon):
 
 
 def pill(name, handle, icon):
-    doc = Doc(256, 64, f"{name}: {handle}")
+    doc = Doc(256, 64, f"{name}: {handle}", transparent=True)
     doc.raw(f'<rect x="1" y="1" width="254" height="62" rx="31" fill="none" stroke="{BORDER}"/>')
     doc.image(icon, 22, 17, 30)
     doc.text(66, 30, name, 23, HEAD, DISPLAY, stroke=DISPLAY_STROKE)
