@@ -64,6 +64,14 @@
 <img src="assets/generated/tile-css3.svg" alt="CSS" width="100">
 </p>
 
+<img src="assets/generated/head-databases.svg" alt="Databases" width="100%">
+
+<p align="center">
+<img src="assets/generated/tile-mysql.svg" alt="MySQL" width="100">
+<img src="assets/generated/tile-neon.svg" alt="Neon" width="100">
+<img src="assets/generated/tile-postgresql.svg" alt="PostgreSQL" width="100">
+</p>
+
 <img src="assets/generated/head-connect.svg" alt="Find me around the internet" width="100%">
 
 <p align="center">

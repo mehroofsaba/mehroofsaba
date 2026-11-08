@@ -581,6 +581,11 @@ def streaks(days):
 # ---- section 04 ------------------------------------------------------------
 LANGUAGES = [("Java", "java"), ("Python", "python"), ("C", "c"), ("C++", "cplusplus"), ("JavaScript", "javascript")]
 FRAMEWORKS = [("Spring Boot", "spring"), ("React", "react"), ("Vite", "vitejs"), ("HTML", "html5"), ("CSS", "css3")]
+DATABASES = [
+    ("MySQL", "mysql"),
+    ("Neon", "neon"),
+    ("PostgreSQL", "postgresql"),
+]
 SOCIALS = [
     ("LeetCode", "MEHroof", "leetcode", LEETCODE_URL),
     ("LinkedIn", "Mehroof Saba", "linkedin", LINKEDIN_URL),
@@ -799,6 +804,11 @@ def build_tech(written):
     )
 
     emit(
+    "head-databases.svg",
+    subhead("Databases", 25, 52)
+)
+
+    emit(
         "head-connect.svg",
         subhead("Find me around the internet", 25, 58)
     )
@@ -837,6 +847,24 @@ def build_tech(written):
 
     # Frameworks and technologies
     for name, icon in FRAMEWORKS:
+        fn = f"tile-{icon}.svg"
+        emit(fn, tile(name, icon))
+        parts.append(img(G + fn, name, 100))
+
+    parts += [
+        "</p>",
+        "",
+        img(
+            G + "head-databases.svg",
+            "Databases",
+            "100%"
+        ),
+        "",
+        '<p align="center">'
+    ]
+
+    # Databases
+    for name, icon in DATABASES:
         fn = f"tile-{icon}.svg"
         emit(fn, tile(name, icon))
         parts.append(img(G + fn, name, 100))
