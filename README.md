@@ -8,8 +8,8 @@
 <img src="assets/generated/head-repositories.svg" alt="Repositories" width="100%">
 
 <p align="center">
-<a href="https://github.com/mehroofsaba/Juggler"><img src="assets/generated/project-01.svg" alt="Juggler" width="392"></a>
-<a href="https://github.com/mehroofsaba/CampusConnect"><img src="assets/generated/project-02.svg" alt="CampusConnect" width="392"></a>
+<a href="https://github.com/mehroofsaba/CampusConnect"><img src="assets/generated/project-01.svg" alt="CampusConnect" width="392"></a>
+<a href="https://github.com/mehroofsaba/Juggler"><img src="assets/generated/project-02.svg" alt="Juggler" width="392"></a>
 <a href="https://github.com/mehroofsaba/Digital-Herbarium"><img src="assets/generated/project-03.svg" alt="Digital-Herbarium" width="392"></a>
 <a href="https://github.com/mehroofsaba/The-Midnight-Door"><img src="assets/generated/project-04.svg" alt="The-Midnight-Door" width="392"></a>
 <a href="https://github.com/mehroofsaba/Bizcuits"><img src="assets/generated/project-05.svg" alt="Bizcuits" width="392"></a>
@@ -19,12 +19,12 @@
 <img src="assets/generated/head-activity.svg" alt="Recent Activity" width="100%">
 
 <p align="center">
-<a href="https://github.com/mehroofsaba/Juggler/commit/23d17e648474a5b3af878265b03397d700f9ee43"><img src="assets/generated/commit-01.svg" alt="Juggler: Revise README for improved clarity and detail" width="392"></a>
-<a href="https://github.com/mehroofsaba/Digital-Herbarium/commit/153120daec1c7ed2475ee3bfe4ab751c3547419a"><img src="assets/generated/commit-02.svg" alt="Digital-Herbarium: Fix formatting of section header in README.md" width="392"></a>
-<a href="https://github.com/mehroofsaba/The-Midnight-Door/commit/958d64255628872c95ab3f46e9b08628c66a68dc"><img src="assets/generated/commit-03.svg" alt="The-Midnight-Door: Add doctype declaration to index.html" width="392"></a>
-<a href="https://github.com/mehroofsaba/Bizcuits/commit/c62bec6ebbf55e4547f255d8cd1e303baac2800a"><img src="assets/generated/commit-04.svg" alt="Bizcuits: Update README.md" width="392"></a>
-<a href="https://github.com/mehroofsaba/AfterHours/commit/c875928f293906c8dc705b46185f38ad909486f5"><img src="assets/generated/commit-05.svg" alt="AfterHours: Update README.md" width="392"></a>
-<a href="https://github.com/mehroofsaba/Detour/commit/748cbca91cf16107c565c1eb25c005f57732e34f"><img src="assets/generated/commit-06.svg" alt="Detour: Add deployed link to README" width="392"></a>
+<a href="https://github.com/mehroofsaba/CampusConnect/commit/c5e5737df8f5a569278181da09d2cdfb1ea1dea0"><img src="assets/generated/commit-01.svg" alt="CampusConnect: Polish CampusConnect frontend and update database schema" width="392"></a>
+<a href="https://github.com/mehroofsaba/Juggler/commit/23d17e648474a5b3af878265b03397d700f9ee43"><img src="assets/generated/commit-02.svg" alt="Juggler: Revise README for improved clarity and detail" width="392"></a>
+<a href="https://github.com/mehroofsaba/Digital-Herbarium/commit/153120daec1c7ed2475ee3bfe4ab751c3547419a"><img src="assets/generated/commit-03.svg" alt="Digital-Herbarium: Fix formatting of section header in README.md" width="392"></a>
+<a href="https://github.com/mehroofsaba/The-Midnight-Door/commit/958d64255628872c95ab3f46e9b08628c66a68dc"><img src="assets/generated/commit-04.svg" alt="The-Midnight-Door: Add doctype declaration to index.html" width="392"></a>
+<a href="https://github.com/mehroofsaba/Bizcuits/commit/c62bec6ebbf55e4547f255d8cd1e303baac2800a"><img src="assets/generated/commit-05.svg" alt="Bizcuits: Update README.md" width="392"></a>
+<a href="https://github.com/mehroofsaba/AfterHours/commit/c875928f293906c8dc705b46185f38ad909486f5"><img src="assets/generated/commit-06.svg" alt="AfterHours: Update README.md" width="392"></a>
 </p>
 
 <img src="assets/generated/head-contributions.svg" alt="Contribution Activity" width="100%">
