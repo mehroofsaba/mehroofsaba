@@ -8,23 +8,23 @@
 <img src="assets/generated/head-repositories.svg" alt="Repositories" width="100%">
 
 <p align="center">
-<a href="https://github.com/mehroofsaba/Floof"><img src="assets/generated/project-01.svg" alt="Floof" width="392"></a>
-<a href="https://github.com/mehroofsaba/the-great-crossing"><img src="assets/generated/project-02.svg" alt="the-great-crossing" width="392"></a>
-<a href="https://github.com/mehroofsaba/Digital-Herbarium"><img src="assets/generated/project-03.svg" alt="Digital-Herbarium" width="392"></a>
-<a href="https://github.com/mehroofsaba/CampusConnect"><img src="assets/generated/project-04.svg" alt="CampusConnect" width="392"></a>
-<a href="https://github.com/mehroofsaba/Juggler"><img src="assets/generated/project-05.svg" alt="Juggler" width="392"></a>
-<a href="https://github.com/mehroofsaba/The-Midnight-Door"><img src="assets/generated/project-06.svg" alt="The-Midnight-Door" width="392"></a>
+<a href="https://github.com/mehroofsaba/mori"><img src="assets/generated/project-01.svg" alt="mori" width="392"></a>
+<a href="https://github.com/mehroofsaba/Floof"><img src="assets/generated/project-02.svg" alt="Floof" width="392"></a>
+<a href="https://github.com/mehroofsaba/the-great-crossing"><img src="assets/generated/project-03.svg" alt="the-great-crossing" width="392"></a>
+<a href="https://github.com/mehroofsaba/Digital-Herbarium"><img src="assets/generated/project-04.svg" alt="Digital-Herbarium" width="392"></a>
+<a href="https://github.com/mehroofsaba/CampusConnect"><img src="assets/generated/project-05.svg" alt="CampusConnect" width="392"></a>
+<a href="https://github.com/mehroofsaba/Juggler"><img src="assets/generated/project-06.svg" alt="Juggler" width="392"></a>
 </p>
 
 <img src="assets/generated/head-activity.svg" alt="Recent Activity" width="100%">
 
 <p align="center">
-<a href="https://github.com/mehroofsaba/Floof/commit/41ac78ad0e7afb795327de330c227153810791c9"><img src="assets/generated/commit-01.svg" alt="Floof: Update README.md" width="392"></a>
-<a href="https://github.com/mehroofsaba/the-great-crossing/commit/32f8b1ea0eec517561fee1f0ebc8c9b66bc7e94f"><img src="assets/generated/commit-02.svg" alt="the-great-crossing: Fix punctuation in README.md" width="392"></a>
-<a href="https://github.com/mehroofsaba/Digital-Herbarium/commit/f6bb40dd517d105dbf2c5db0a05af0b8a9bddee3"><img src="assets/generated/commit-03.svg" alt="Digital-Herbarium: Change header level for deployed link section" width="392"></a>
-<a href="https://github.com/mehroofsaba/CampusConnect/commit/c5e5737df8f5a569278181da09d2cdfb1ea1dea0"><img src="assets/generated/commit-04.svg" alt="CampusConnect: Polish CampusConnect frontend and update database schema" width="392"></a>
-<a href="https://github.com/mehroofsaba/Juggler/commit/23d17e648474a5b3af878265b03397d700f9ee43"><img src="assets/generated/commit-05.svg" alt="Juggler: Revise README for improved clarity and detail" width="392"></a>
-<a href="https://github.com/mehroofsaba/The-Midnight-Door/commit/958d64255628872c95ab3f46e9b08628c66a68dc"><img src="assets/generated/commit-06.svg" alt="The-Midnight-Door: Add doctype declaration to index.html" width="392"></a>
+<a href="https://github.com/mehroofsaba/mori/commit/f17625bc38d994092b52237f54b3f11a5404034a"><img src="assets/generated/commit-01.svg" alt="mori: Initial commit: updated ui" width="392"></a>
+<a href="https://github.com/mehroofsaba/Floof/commit/41ac78ad0e7afb795327de330c227153810791c9"><img src="assets/generated/commit-02.svg" alt="Floof: Update README.md" width="392"></a>
+<a href="https://github.com/mehroofsaba/the-great-crossing/commit/32f8b1ea0eec517561fee1f0ebc8c9b66bc7e94f"><img src="assets/generated/commit-03.svg" alt="the-great-crossing: Fix punctuation in README.md" width="392"></a>
+<a href="https://github.com/mehroofsaba/Digital-Herbarium/commit/f6bb40dd517d105dbf2c5db0a05af0b8a9bddee3"><img src="assets/generated/commit-04.svg" alt="Digital-Herbarium: Change header level for deployed link section" width="392"></a>
+<a href="https://github.com/mehroofsaba/CampusConnect/commit/c5e5737df8f5a569278181da09d2cdfb1ea1dea0"><img src="assets/generated/commit-05.svg" alt="CampusConnect: Polish CampusConnect frontend and update database schema" width="392"></a>
+<a href="https://github.com/mehroofsaba/Juggler/commit/23d17e648474a5b3af878265b03397d700f9ee43"><img src="assets/generated/commit-06.svg" alt="Juggler: Revise README for improved clarity and detail" width="392"></a>
 </p>
 
 <img src="assets/generated/head-contributions.svg" alt="Contribution Activity" width="100%">
