@@ -19,7 +19,7 @@
 <img src="assets/generated/head-activity.svg" alt="Recent Activity" width="100%">
 
 <p align="center">
-<a href="https://github.com/mehroofsaba/mori/commit/f17625bc38d994092b52237f54b3f11a5404034a"><img src="assets/generated/commit-01.svg" alt="mori: Initial commit: updated ui" width="392"></a>
+<a href="https://github.com/mehroofsaba/mori/commit/546be2efdda0ccebe71726ac5a94df3e8cb13e9b"><img src="assets/generated/commit-01.svg" alt="mori: Fix formatting in README.md links section" width="392"></a>
 <a href="https://github.com/mehroofsaba/Floof/commit/41ac78ad0e7afb795327de330c227153810791c9"><img src="assets/generated/commit-02.svg" alt="Floof: Update README.md" width="392"></a>
 <a href="https://github.com/mehroofsaba/the-great-crossing/commit/32f8b1ea0eec517561fee1f0ebc8c9b66bc7e94f"><img src="assets/generated/commit-03.svg" alt="the-great-crossing: Fix punctuation in README.md" width="392"></a>
 <a href="https://github.com/mehroofsaba/Digital-Herbarium/commit/f6bb40dd517d105dbf2c5db0a05af0b8a9bddee3"><img src="assets/generated/commit-04.svg" alt="Digital-Herbarium: Change header level for deployed link section" width="392"></a>
