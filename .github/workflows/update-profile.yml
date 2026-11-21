@@ -2,7 +2,7 @@ name: Update Projects & Activity
 
 on:
   schedule:
-    - cron: "0 */4 * * *" # every four hours
+    - cron: "0 */4 * * *"
   workflow_dispatch:
   push:
     branches: [main]
@@ -33,10 +33,16 @@ jobs:
       - name: Generate Projects & Activity and Tech Stack
         env:
           GH_USER: ${{ github.repository_owner }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # built-in; only used to avoid API rate limits
-          BERGHAN_FONT_B64: ${{ secrets.BERGHAN_FONT_B64 }}
-
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python scripts/update_profile.py
+
+      - name: Generate custom contribution snake
+        uses: Platane/snk/svg-only@v3
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          outputs: |
+            assets/generated/contribution-snake.svg?color_snake=%23D9A9A3&color_dots=%231F2021,%233A3532,%236C5F58,%23A8978C,%23E3CDBD
 
       - name: Commit only if something changed
         run: |
@@ -46,6 +52,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "chore: refresh projects & activity"
+            git commit -m "chore: refresh projects, activity & snake"
             git push
           fi
