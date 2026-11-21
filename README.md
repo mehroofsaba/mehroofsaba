@@ -30,7 +30,7 @@
 <img src="assets/generated/head-contributions.svg" alt="Contribution Activity" width="100%">
 
 <p align="center">
-<img src="assets/generated/contribution-snake.svg" alt="Animated blush and champagne GitHub contribution snake" width="800">
+<img src="https://raw.githubusercontent.com/mehroofsaba/mehroofsaba/main/assets/generated/contribution-snake.svg" alt="Animated blush and champagne GitHub contribution snake" width="800">
 </p>
 <p align="center">
 <img src="assets/generated/stat-1.svg" alt="contributions" width="190">
