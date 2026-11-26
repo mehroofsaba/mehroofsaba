@@ -8,23 +8,23 @@
 <img src="assets/generated/head-repositories.svg" alt="Repositories" width="100%">
 
 <p align="center">
-<a href="https://github.com/mehroofsaba/lumen"><img src="assets/generated/project-01.svg" alt="lumen" width="392"></a>
-<a href="https://github.com/mehroofsaba/Wobble_demo"><img src="assets/generated/project-02.svg" alt="Wobble_demo" width="392"></a>
-<a href="https://github.com/mehroofsaba/Portfolio"><img src="assets/generated/project-03.svg" alt="Portfolio" width="392"></a>
-<a href="https://github.com/mehroofsaba/Aquaria"><img src="assets/generated/project-04.svg" alt="Aquaria" width="392"></a>
-<a href="https://github.com/mehroofsaba/mori"><img src="assets/generated/project-05.svg" alt="mori" width="392"></a>
-<a href="https://github.com/mehroofsaba/Floof"><img src="assets/generated/project-06.svg" alt="Floof" width="392"></a>
+<a href="https://github.com/mehroofsaba/wobble"><img src="assets/generated/project-01.svg" alt="wobble" width="392"></a>
+<a href="https://github.com/mehroofsaba/lumen"><img src="assets/generated/project-02.svg" alt="lumen" width="392"></a>
+<a href="https://github.com/mehroofsaba/Wobble_demo"><img src="assets/generated/project-03.svg" alt="Wobble_demo" width="392"></a>
+<a href="https://github.com/mehroofsaba/Portfolio"><img src="assets/generated/project-04.svg" alt="Portfolio" width="392"></a>
+<a href="https://github.com/mehroofsaba/Aquaria"><img src="assets/generated/project-05.svg" alt="Aquaria" width="392"></a>
+<a href="https://github.com/mehroofsaba/mori"><img src="assets/generated/project-06.svg" alt="mori" width="392"></a>
 </p>
 
 <img src="assets/generated/head-activity.svg" alt="Recent Activity" width="100%">
 
 <p align="center">
-<a href="https://github.com/mehroofsaba/lumen/commit/64c33718d409ac787c8fce241b5b0a1062750ddf"><img src="assets/generated/commit-01.svg" alt="lumen: Fix formatting in README.md" width="392"></a>
-<a href="https://github.com/mehroofsaba/Wobble_demo/commit/b57862ab78d0b81f34c8b73c6836627a85c948ee"><img src="assets/generated/commit-02.svg" alt="Wobble_demo: Refresh Wobble README for new users" width="392"></a>
-<a href="https://github.com/mehroofsaba/Portfolio/commit/f6faf111eccc8b5ceb0bef7fafa45832edc65d8b"><img src="assets/generated/commit-03.svg" alt="Portfolio: Merge branch 'main' of https://github.com/mehroofsaba/Portfolio" width="392"></a>
-<a href="https://github.com/mehroofsaba/Aquaria/commit/525064c1de31857b6568007079eb598acbee9276"><img src="assets/generated/commit-04.svg" alt="Aquaria: Update Journal component, worlds data, and global styles" width="392"></a>
-<a href="https://github.com/mehroofsaba/mori/commit/546be2efdda0ccebe71726ac5a94df3e8cb13e9b"><img src="assets/generated/commit-05.svg" alt="mori: Fix formatting in README.md links section" width="392"></a>
-<a href="https://github.com/mehroofsaba/Floof/commit/41ac78ad0e7afb795327de330c227153810791c9"><img src="assets/generated/commit-06.svg" alt="Floof: Update README.md" width="392"></a>
+<a href="https://github.com/mehroofsaba/wobble/commit/234264d5701ed62a842a98c210a7525f9ee6f3ee"><img src="assets/generated/commit-01.svg" alt="wobble: Initial commit: Wobble desktop companion" width="392"></a>
+<a href="https://github.com/mehroofsaba/lumen/commit/64c33718d409ac787c8fce241b5b0a1062750ddf"><img src="assets/generated/commit-02.svg" alt="lumen: Fix formatting in README.md" width="392"></a>
+<a href="https://github.com/mehroofsaba/Wobble_demo/commit/b57862ab78d0b81f34c8b73c6836627a85c948ee"><img src="assets/generated/commit-03.svg" alt="Wobble_demo: Refresh Wobble README for new users" width="392"></a>
+<a href="https://github.com/mehroofsaba/Portfolio/commit/f6faf111eccc8b5ceb0bef7fafa45832edc65d8b"><img src="assets/generated/commit-04.svg" alt="Portfolio: Merge branch 'main' of https://github.com/mehroofsaba/Portfolio" width="392"></a>
+<a href="https://github.com/mehroofsaba/Aquaria/commit/525064c1de31857b6568007079eb598acbee9276"><img src="assets/generated/commit-05.svg" alt="Aquaria: Update Journal component, worlds data, and global styles" width="392"></a>
+<a href="https://github.com/mehroofsaba/mori/commit/546be2efdda0ccebe71726ac5a94df3e8cb13e9b"><img src="assets/generated/commit-06.svg" alt="mori: Fix formatting in README.md links section" width="392"></a>
 </p>
 
 <img src="assets/generated/head-contributions.svg" alt="Contribution Activity" width="100%">
