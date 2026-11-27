@@ -19,7 +19,7 @@
 <img src="assets/generated/head-activity.svg" alt="Recent Activity" width="100%">
 
 <p align="center">
-<a href="https://github.com/mehroofsaba/wobble/commit/c128e8d44a22c249952e3e9afe3d94b359b9f8a5"><img src="assets/generated/commit-01.svg" alt="wobble: Merge pull request #3 from mehroofsaba/docs/clarify-quitting-before-backup" width="392"></a>
+<a href="https://github.com/mehroofsaba/wobble/commit/62330b9bba909858b63d92705835a1722405618b"><img src="assets/generated/commit-01.svg" alt="wobble: Merge pull request #5 from mehroofsaba/pair-extraordinaire" width="392"></a>
 <a href="https://github.com/mehroofsaba/lumen/commit/64c33718d409ac787c8fce241b5b0a1062750ddf"><img src="assets/generated/commit-02.svg" alt="lumen: Fix formatting in README.md" width="392"></a>
 <a href="https://github.com/mehroofsaba/Wobble_demo/commit/b57862ab78d0b81f34c8b73c6836627a85c948ee"><img src="assets/generated/commit-03.svg" alt="Wobble_demo: Refresh Wobble README for new users" width="392"></a>
 <a href="https://github.com/mehroofsaba/Portfolio/commit/f6faf111eccc8b5ceb0bef7fafa45832edc65d8b"><img src="assets/generated/commit-04.svg" alt="Portfolio: Merge branch 'main' of https://github.com/mehroofsaba/Portfolio" width="392"></a>
